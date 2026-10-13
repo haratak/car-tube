@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CarTube</string>
+    <string name="safety_title">ご利用の前に</string>
+    <string name="safety_message">このアプリは、駐車中に見るか、同乗者が操作するためのものです。運転中に画面を触ったり、映像を見たりしないでください。</string>
+    <string name="safety_accept">理解した</string>
+    <string name="warning_banner">駐車中・同乗者向けです。運転中は操作も視聴もしないでください。</string>
+    <string name="url_hint">YouTubeのURL、またはキーワード</string>
+    <string name="open_on_car">車の画面で開く</string>
+    <string name="open_home">YouTubeを車の画面で開く</string>
+    <string name="how_to">車のランチャーで CarTube を開いた状態で、URL か言葉を送ってください。タップは車の画面に伝わります。スクロールは、パンのボタンを押してからドラッグします。</string>
+    <string name="status_connected">Android Auto に接続しています。車のランチャーで CarTube を開いてください。</string>
+    <string name="status_disconnected">Android Auto にはまだ接続していません。車とつないでから、車のランチャーで CarTube を開いてください。</string>
+    <string name="status_missing">このスマホに Android Auto が入っていません。先に Android Auto をインストールしてください。</string>
+    <string name="sent_connected">車の画面に送りました。</string>
+    <string name="sent_saved">保存しました。車のランチャーで CarTube を開くと、そのページを開きます。</string>
+    <string name="invalid_url">YouTube の URL か、検索したい言葉を入力してください。</string>
+    <string name="battery_settings">バッテリー制限を解除</string>
+    <string name="autostart_settings">自動起動の設定を開く</string>
+    <string name="xiaomi_note">Xiaomi / HyperOS では、自動起動を許可し、バッテリーを「制限なし」にしてください。止められると、車の画面が真っ黒になります。</string>
+    <string name="settings_unavailable">設定画面を開けませんでした。スマホの設定から CarTube を開いてください。</string>
+    <string name="action_home">ホーム</string>
+    <string name="action_reload">更新</string>
+    <string name="car_safety_toast">駐車中・同乗者向けです。運転中は操作しないでください。</string>
+    <string name="car_surface_failed">車の画面を初期化できませんでした。Android Auto を開き直してください。</string>
+    <string name="car_render_failed">表示が止まったので、車の画面で CarTube を開き直してください。</string>
+    <string name="notif_channel">再生</string>
+    <string name="notif_channel_desc">車の画面に映像を出しているあいだ、この通知を出します。</string>
+    <string name="notif_title">CarTube</string>
+    <string name="notif_text">車の画面に YouTube を表示しています。運転中は操作しないでください。</string>
+</resources>
