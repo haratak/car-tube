@@ -48,15 +48,34 @@ Android 15 以降のスマホでは、車のランチャーが駐車中の画面
 
 ### ランチャーにまだ出ないとき
 
-上までやってもアイコンが出ない車があります。Android Auto が「Play ストアから入れたアプリか」を見て、GitHub の APK を拒否している状態です。そのときは [KingInstaller](https://github.com/fcaronte/KingInstaller) で入れ直します。
+上までやってもアイコンが出ない車があります。Android Auto 17 以降は、GitHub から入れた APK だと `InstallSourceInfo` の initiating package を見て、テンプレート系アプリを隠すことがあります。CarTube 0.2.0 は `android:appCategory="game"` と駐車専用の `CAR_LAUNCHER` で、多くの環境ではこの問題を避けられます。それでも出ないときは、Play ストア経由のインストール記録を付け直します。
 
-1. KingInstaller と [Shizuku](https://github.com/RikkaApps/Shizuku) を入れる。Shizuku はワイヤレスデバッグで起動します。
-2. KingInstaller で、Releases から落とした APK を選び、Shizuku の方法でインストールする。
-3. Android Auto の「提供元不明のアプリ」がオンであることを確認し、車との接続を切り直す。
+**CarTube Installer（同梱・別 APK）**
 
-Xiaomi / HyperOS では、KingInstaller の Shizuku での入れ替えがメーカー側の制限で失敗することがあります。その場合は、同じアプリの Root での入れ方が、KingInstaller の説明にある次の手段です。
+1. [Releases](https://github.com/haratak/car-tube/releases) から `car-tube-installer-*.apk` を入れる。
+2. 下の Shizuku 手順で Shizuku を起動する。
+3. CarTube Installer で `car-tube-*.apk` を選び、「Play ストア扱いでインストール」を実行する。
+4. 画面下の診断で `installer=com.android.vending` になっているか確認する。
+5. Android Auto の「提供元不明のアプリ」がオンであることを確認し、車との接続を切り直す。
 
-あとから普通の手順で上書きインストールすると、Play ストア扱いの記録が消えます。そのときは、また KingInstaller で入れ直してください。
+**KingInstaller（代替）**
+
+[KingInstaller](https://github.com/fcaronte/KingInstaller) でも同じ目的のインストールができます。Shizuku 方式が使えない場合は KingInstaller の Root 方式が、HyperOS ではより確実なことがあります。
+
+あとから普通の APK で上書きインストールすると、Play ストア扱いの記録が消えます。そのときは、また CarTube Installer か KingInstaller で入れ直してください。
+
+#### Xiaomi 14 Ultra（HyperOS）で Shizuku を起動する
+
+ルート不要です。Developer options と Wireless debugging を使います。
+
+1. **開発者向けオプション**: 設定 → 端末情報 → OS バージョン（または MIUI バージョン）を 7 回タップ → 設定 → 追加設定 → 開発者向けオプション。
+2. **USB デバッグ** と **ワイヤレスデバッグ** をオンにする。
+3. 開発者向けオプション → **ワイヤレスデバッグ** を開く → **ペア設定コードによるデバイスのペア設定**。
+4. 表示された 6 桁コードとポートを、PC から `adb pair <ip>:<pair-port>` でペアする（PC がなくても Shizuku アプリ内の案内に従えば同じ操作ができます）。
+5. ペア後、Shizuku アプリを開き **ワイヤレスデバッグで起動** をタップする。通知に「Shizuku 正在运行」と出れば OK。
+6. CarTube Installer を開き **Shizuku の権限を許可** する。
+
+HyperOS では Shizuku 経由の入れ替えがメーカー制限で失敗することがあります。そのときは KingInstaller の Root 方式、または Root 環境での `pm install -i com.android.vending` が必要になることがあります。
 
 ### 3. Xiaomi / HyperOS で落ちるとき
 

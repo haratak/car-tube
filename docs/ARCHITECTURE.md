@@ -79,7 +79,12 @@ Two entries can appear:
 
 The foreground playback service is reference-counted across those two hosts so one of them finishing does not drop the wake lock while the other is still showing the page.
 
-Some head units still deny the template package when Play has no install owner. The fallback is to install the GitHub APK with [KingInstaller](https://github.com/fcaronte/KingInstaller) so the recorded installer is the Play Store, then leave Unknown sources on. KingInstaller's Shizuku method is the one that does not need the Google installer session. On current Xiaomi / HyperOS builds that method often fails, and KingInstaller documents its root method as the one that works there. An update installed over the top clears the Play install record, so the same route has to be used again.
+Some head units still deny the template package when Play has no install owner. CarTube 0.2.0 usually avoids that by declaring `android:appCategory="game"` and a parked `CAR_LAUNCHER` activity (see above). When a host still checks `InstallSourceInfo`, install the GitHub APK again so the recorded installer is the Play Store:
+
+- **`installer` module** (`app.cartube.installer`, artifact `car-tube-installer-*.apk`): a small companion app that runs `pm install -i com.android.vending` through [Shizuku](https://github.com/RikkaApps/Shizuku). It is a clean-room helper, not derived from [KingInstaller](https://github.com/fcaronte/KingInstaller) (GPL).
+- **KingInstaller** remains a supported alternative, including its root path on Xiaomi / HyperOS when Shizuku spoofing fails.
+
+An ordinary sideload update clears the Play install record; repeat the Shizuku or KingInstaller route after upgrading.
 
 ## Car surface
 
