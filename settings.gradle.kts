@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "car-tube"
-include(":app")
+include(":app", ":installer")

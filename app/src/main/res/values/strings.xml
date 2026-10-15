@@ -8,7 +8,7 @@
     <string name="url_hint">YouTubeのURL、またはキーワード</string>
     <string name="open_on_car">入力した内容を車で開く</string>
     <string name="open_home">YouTubeのトップを車で開く</string>
-    <string name="how_to">車のランチャーで CarTube を開いた状態で、URL か言葉を送ってください。タップは車の画面に伝わります。スクロールは、パンのボタンを押してからドラッグします。</string>
+    <string name="how_to">車のランチャーで CarTube を開いた状態で、URL か言葉を送ってください。駐車中の画面ではページをそのまま触れます。パンのボタンがある画面では、タップは伝わり、スクロールはパンを押してからドラッグします。</string>
     <string name="status_connected">Android Auto に接続しています。車のランチャーで CarTube を開いてください。</string>
     <string name="status_disconnected">Android Auto にはまだ接続していません。車とつないでから、車のランチャーで CarTube を開いてください。</string>
     <string name="status_missing">このスマホに Android Auto が入っていません。先に Android Auto をインストールしてください。</string>

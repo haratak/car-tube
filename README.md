@@ -42,6 +42,41 @@ YouTube も Android Auto も、それぞれの会社の名前です。CarTube �
 
 これをしないと、CarTube は車のランチャーに出てきません。
 
+Android Auto 17 は、ナビ（カテゴリが maps）として宣言したサイドロードアプリを、このスイッチがオンでも隠します。CarTube はアプリの種別を game にしてあります。[AABrowser](https://github.com/kododake/AABrowser) と同じ扱いで、提供元不明のアプリがオンなら一覧に出ます。出るのは駐車中だけです。車が動き出すと画面はグレーになり、操作できなくなります。運転中に見ない、というこのアプリの前提と同じです。
+
+Android 15 以降のスマホでは、車のランチャーが駐車中の画面として CarTube を開きます。ページをそのまま触れます。それより前の Android や、デスクトップヘッドユニットでは、従来どおりテンプレートの画面が開きます。そちらはパンのボタンを押してからドラッグします。アイコンが2つ出たときは、どちらでも再生できます。
+
+### ランチャーにまだ出ないとき
+
+上までやってもアイコンが出ない車があります。Android Auto 17 以降は、GitHub から入れた APK だと `InstallSourceInfo` の initiating package を見て、テンプレート系アプリを隠すことがあります。CarTube 0.2.0 は `android:appCategory="game"` と駐車専用の `CAR_LAUNCHER` で、多くの環境ではこの問題を避けられます。それでも出ないときは、Play ストア経由のインストール記録を付け直します。
+
+**CarTube Installer（同梱・別 APK）**
+
+1. [Releases](https://github.com/haratak/car-tube/releases) から `car-tube-installer-*.apk` を入れる。
+2. 下の Shizuku 手順で Shizuku を起動する。
+3. CarTube Installer で `car-tube-*.apk` を選び、「Play ストア扱いでインストール」を実行する。
+4. 画面下の診断で `installer=com.android.vending` になっているか確認する。
+5. Android Auto の「提供元不明のアプリ」がオンであることを確認し、車との接続を切り直す。
+
+**KingInstaller（代替）**
+
+[KingInstaller](https://github.com/fcaronte/KingInstaller) でも同じ目的のインストールができます。Shizuku 方式が使えない場合は KingInstaller の Root 方式が、HyperOS ではより確実なことがあります。
+
+あとから普通の APK で上書きインストールすると、Play ストア扱いの記録が消えます。そのときは、また CarTube Installer か KingInstaller で入れ直してください。
+
+#### Xiaomi 14 Ultra（HyperOS）で Shizuku を起動する
+
+ルート不要です。Developer options と Wireless debugging を使います。
+
+1. **開発者向けオプション**: 設定 → 端末情報 → OS バージョン（または MIUI バージョン）を 7 回タップ → 設定 → 追加設定 → 開発者向けオプション。
+2. **USB デバッグ** と **ワイヤレスデバッグ** をオンにする。
+3. 開発者向けオプション → **ワイヤレスデバッグ** を開く → **ペア設定コードによるデバイスのペア設定**。
+4. 表示された 6 桁コードとポートを、PC から `adb pair <ip>:<pair-port>` でペアする（PC がなくても Shizuku アプリ内の案内に従えば同じ操作ができます）。
+5. ペア後、Shizuku アプリを開き **ワイヤレスデバッグで起動** をタップする。通知に「Shizuku 正在运行」と出れば OK。
+6. CarTube Installer を開き **Shizuku の権限を許可** する。
+
+HyperOS では Shizuku 経由の入れ替えがメーカー制限で失敗することがあります。そのときは KingInstaller の Root 方式、または Root 環境での `pm install -i com.android.vending` が必要になることがあります。
+
 ### 3. Xiaomi / HyperOS で落ちるとき
 
 HyperOS は、画面を消すとアプリを止めがちです。車の画面が真っ黒になる、音だけ消える、というときはここを確認してください。
@@ -59,7 +94,7 @@ HyperOS は、画面を消すとアプリを止めがちです。車の画面が
 3. スマホの CarTube に、YouTube の URL を貼るか、見たい言葉を入力する。
 4. 「車の画面で開く」を押す。映像は車の画面に出ます。
 
-車の画面をタップすると、再生や一時停止などの操作がページに伝わります。リストをスクロールしたいときは、画面のパン（地図を動かすときのボタン）を押してからドラッグしてください。車の戻る操作は、ページの履歴を戻します。
+車の画面をタップすると、再生や一時停止などの操作がページに伝わります。テンプレートの画面でリストをスクロールしたいときは、画面のパン（地図を動かすときのボタン）を押してからドラッグしてください。駐車中の画面として開いているときは、ページをそのまま触れます。車の戻る操作は、ページの履歴を戻します。
 
 次のような入力が使えます。
 

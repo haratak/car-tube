@@ -33,7 +33,7 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
 
       - name: Test and assemble debug
-        run: chmod +x ./gradlew && ./gradlew testDebugUnitTest assembleDebug --stacktrace
+        run: chmod +x ./gradlew && ./gradlew testDebugUnitTest assembleDebug :installer:assembleDebug lintDebug --stacktrace
 
   release:
     name: Signed release APK
@@ -79,7 +79,7 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: chmod +x ./gradlew && ./gradlew testDebugUnitTest assembleRelease --stacktrace
 
-      - name: Rename APK
+      - name: Rename APKs
         run: |
           version="${GITHUB_REF_NAME#v}"
           apk=$(find app/build/outputs/apk/release -type f -name '*.apk' ! -name '*unsigned*' -print -quit)
@@ -88,10 +88,19 @@ jobs:
             exit 1
           fi
           cp "$apk" "car-tube-${version}.apk"
+          ./gradlew :installer:assembleRelease --stacktrace
+          inst=$(find installer/build/outputs/apk/release -type f -name '*.apk' ! -name '*unsigned*' -print -quit)
+          if [ -z "$inst" ]; then
+            echo "Installer release APK was not produced"
+            exit 1
+          fi
+          cp "$inst" "car-tube-installer-${version}.apk"
 
       - uses: softprops/action-gh-release@v2
         with:
-          files: car-tube-*.apk
+          files: |
+            car-tube-*.apk
+            car-tube-installer-*.apk
           fail_on_unmatched_files: true
           generate_release_notes: true
           body: |

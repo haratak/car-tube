@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CarTube Installer</string>
+    <string name="about">CarTube の APK を Shizuku 経由で入れ直し、Android Auto が Play ストア経由のインストールと認識しやすくします。KingInstaller とは無関係の独立実装です。運転中は使わないでください。</string>
+    <string name="request_shizuku">Shizuku の権限を許可</string>
+    <string name="pick_apk">APK を選ぶ</string>
+    <string name="install_as_play">Play ストア扱いでインストール</string>
+    <string name="refresh_diag">CarTube のインストール元を確認</string>
+    <string name="shizuku_not_running">Shizuku が起動していません。下の README 手順でワイヤレスデバッグから起動してください。</string>
+    <string name="shizuku_need_permission">Shizuku は起動しています。権限を許可してください。</string>
+    <string name="shizuku_ready">Shizuku の準備ができました。</string>
+    <string name="shizuku_granted">Shizuku を許可しました。</string>
+    <string name="shizuku_rationale">CarTube Installer は Shizuku の adb 権限で pm install を実行します。</string>
+    <string name="apk_none">まだ APK が選ばれていません。</string>
+    <string name="apk_selected">選択中: %1$s</string>
+    <string name="pick_apk_first">先に APK を選んでください。</string>
+    <string name="apk_read_failed">APK を読み取れませんでした。</string>
+    <string name="install_running">インストール中…</string>
+    <string name="install_ok">完了: %1$s</string>
+    <string name="install_failed">失敗: %1$s</string>
+    <string name="cartube_not_installed">app.cartube はまだ入っていません。</string>
+    <string name="install_source">installer=%1$s\ninitiating=%2$s\noriginating=%3$s</string>
+    <string name="install_source_legacy">installer=%1$s</string>
+</resources>
