@@ -17,6 +17,7 @@
     <application
         android:name=".CarTubeApp"
         android:allowBackup="false"
+        android:appCategory="game"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -40,6 +41,27 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!--
+            Android Auto 17 lists a sideloaded app when android:appCategory is
+            game, and projects this activity while the car is parked. The
+            CarAppService below stays NAVIGATION so a host that binds it still
+            hands over a surface. See docs/ARCHITECTURE.md.
+        -->
+        <activity
+            android:name=".auto.CarPlayerActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|density|uiMode"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:taskAffinity="app.cartube.car"
+            android:theme="@style/Theme.CarTube.Presentation">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.CAR_LAUNCHER" />
             </intent-filter>
         </activity>
 

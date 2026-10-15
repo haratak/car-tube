@@ -11,8 +11,8 @@ import androidx.lifecycle.LifecycleOwner
 class CarTubeService : CarAppService() {
     override fun createHostValidator(): HostValidator {
         // Sideloaded installs talk to the Android Auto projection app and, in
-        // development, the Desktop Head Unit. Unknown sources is already an
-        // explicit user opt-in. See docs/ARCHITECTURE.md.
+        // development, the Desktop Head Unit. The application category is
+        // game so Android Auto 17 can list the package. See docs/ARCHITECTURE.md.
         return HostValidator.ALLOW_ALL_HOSTS_VALIDATOR
     }
 
@@ -25,10 +25,10 @@ class CarTubeSession : Session() {
     override fun onCreateScreen(intent: Intent): Screen {
         if (!foregroundHooked) {
             foregroundHooked = true
-            PlaybackForegroundService.start(carContext)
+            PlaybackForegroundService.acquire(carContext)
             lifecycle.addObserver(object : DefaultLifecycleObserver {
                 override fun onDestroy(owner: LifecycleOwner) {
-                    PlaybackForegroundService.stop(carContext)
+                    PlaybackForegroundService.release(carContext)
                 }
             })
         }

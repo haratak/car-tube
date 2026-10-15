@@ -13,13 +13,7 @@ import android.view.Display
 import android.view.Surface
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.webkit.CookieManager
-import android.webkit.JsPromptResult
-import android.webkit.JsResult
-import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebChromeClient
-import android.webkit.WebResourceRequest
-import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
@@ -27,11 +21,10 @@ import androidx.car.app.CarContext
 import androidx.car.app.CarToast
 import androidx.car.app.SurfaceCallback
 import androidx.car.app.SurfaceContainer
-import app.cartube.BuildConfig
 import app.cartube.PlaybackStore
 import app.cartube.R
-import app.cartube.UserAgents
-import app.cartube.YouTubeUrls
+import app.cartube.YouTubeChromeClient
+import app.cartube.YouTubeWebView
 
 /**
  * Renders the YouTube WebView into the surface Android Auto hands the app.
@@ -66,7 +59,7 @@ class CarSurfaceRenderer(
         if (released) return
         val view = webView ?: return
         Log.i(TAG, "Loading ${url.substringBefore('?')}")
-        view.loadUrl(url, mapOf("Referer" to YouTubeUrls.EMBED_REFERER))
+        YouTubeWebView.load(view, url)
     }
 
     fun reload() {
@@ -232,47 +225,8 @@ class CarSurfaceRenderer(
     }
 
     private fun configureWebView(web: WebView) {
-        if (BuildConfig.DEBUG) {
-            WebView.setWebContentsDebuggingEnabled(true)
-        }
-        CookieManager.getInstance().setAcceptCookie(true)
-        CookieManager.getInstance().setAcceptThirdPartyCookies(web, true)
-        web.setBackgroundColor(Color.BLACK)
-        web.isFocusable = true
-        web.isFocusableInTouchMode = true
-        web.settings.apply {
-            javaScriptEnabled = true
-            domStorageEnabled = true
-            mediaPlaybackRequiresUserGesture = false
-            useWideViewPort = true
-            loadWithOverviewMode = true
-            setSupportZoom(true)
-            builtInZoomControls = false
-            displayZoomControls = false
-            javaScriptCanOpenWindowsAutomatically = false
-            loadsImagesAutomatically = true
-            mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
-            cacheMode = WebSettings.LOAD_DEFAULT
-            allowFileAccess = false
-            allowContentAccess = false
-            userAgentString = UserAgents.forYouTube(userAgentString ?: "")
-        }
-        web.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-                if (!request.isForMainFrame) return false
-                val uri = request.url ?: return true
-                val allowed = YouTubeUrls.isAllowedNavigation(uri.toString())
-                if (!allowed) Log.i(TAG, "Blocked navigation to ${uri.host}")
-                return !allowed
-            }
-
-            override fun onRenderProcessGone(view: WebView, detail: RenderProcessGoneDetail): Boolean {
-                Log.e(TAG, "WebView renderer gone didCrash=${detail.didCrash()}")
-                main.post { recreateAfterCrash() }
-                return true
-            }
-        }
-        web.webChromeClient = object : WebChromeClient() {
+        YouTubeWebView.configure(web) { main.post { recreateAfterCrash() } }
+        web.webChromeClient = object : YouTubeChromeClient() {
             override fun onShowCustomView(view: View?, callback: CustomViewCallback?) {
                 if (view == null || customView != null) {
                     callback?.onCustomViewHidden()
@@ -294,27 +248,6 @@ class CarSurfaceRenderer(
                 web.visibility = View.VISIBLE
                 fullscreenCallback?.onCustomViewHidden()
                 fullscreenCallback = null
-            }
-
-            override fun onJsAlert(view: WebView?, url: String?, message: String?, result: JsResult?): Boolean {
-                result?.cancel()
-                return true
-            }
-
-            override fun onJsConfirm(view: WebView?, url: String?, message: String?, result: JsResult?): Boolean {
-                result?.cancel()
-                return true
-            }
-
-            override fun onJsPrompt(
-                view: WebView?,
-                url: String?,
-                message: String?,
-                defaultValue: String?,
-                result: JsPromptResult?,
-            ): Boolean {
-                result?.cancel()
-                return true
             }
         }
         web.requestFocus()

@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat
 import androidx.media.app.NotificationCompat.MediaStyle
 import app.cartube.MainActivity
 import app.cartube.R
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * Keeps the process in the foreground while the car screen is showing video.
@@ -170,6 +171,8 @@ class PlaybackForegroundService : Service() {
             manager.createNotificationChannel(channel)
         }
 
+        private val holders = AtomicInteger(0)
+
         fun start(context: Context) {
             val appContext = context.applicationContext
             ensureChannel(appContext)
@@ -181,6 +184,22 @@ class PlaybackForegroundService : Service() {
             } catch (t: Exception) {
                 Log.w(TAG, "Playback service was not started", t)
             }
+        }
+
+        /**
+         * The template session and the parked activity can both be alive.
+         * The service stops when the last of them releases it. The phone
+         * screen calls [start] on its own and does not take a hold.
+         */
+        fun acquire(context: Context) {
+            holders.incrementAndGet()
+            start(context)
+        }
+
+        fun release(context: Context) {
+            if (holders.decrementAndGet() > 0) return
+            holders.set(0)
+            stop(context)
         }
 
         fun stop(context: Context) {
