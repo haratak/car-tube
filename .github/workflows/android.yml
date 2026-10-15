@@ -81,19 +81,31 @@ jobs:
 
       - name: Rename APKs
         run: |
+          set -euo pipefail
           version="${GITHUB_REF_NAME#v}"
-          apk=$(find app/build/outputs/apk/release -type f -name '*.apk' ! -name '*unsigned*' -print -quit)
-          if [ -z "$apk" ]; then
-            echo "Signed release APK was not produced"
-            exit 1
-          fi
+
+          pick_signed_release_apk() {
+            local dir="$1"
+            local label="$2"
+            if [ ! -d "$dir" ]; then
+              echo "$label release directory missing: $dir"
+              return 1
+            fi
+            local apk
+            apk=$(find "$dir" -maxdepth 1 -type f -name '*.apk' ! -name '*unsigned*' -print -quit)
+            if [ -n "$apk" ]; then
+              echo "$apk"
+              return 0
+            fi
+            echo "$label signed release APK was not produced under $dir"
+            echo "APKs present:"
+            find "$dir" -maxdepth 1 -type f -name '*.apk' -print || true
+            return 1
+          }
+
+          apk=$(pick_signed_release_apk "app/build/outputs/apk/release" "CarTube")
           cp "$apk" "car-tube-${version}.apk"
-          ./gradlew :installer:assembleRelease --stacktrace
-          inst=$(find installer/build/outputs/apk/release -type f -name '*.apk' ! -name '*unsigned*' -print -quit)
-          if [ -z "$inst" ]; then
-            echo "Installer release APK was not produced"
-            exit 1
-          fi
+          inst=$(pick_signed_release_apk "installer/build/outputs/apk/release" "Installer")
           cp "$inst" "car-tube-installer-${version}.apk"
 
       - uses: softprops/action-gh-release@v2
