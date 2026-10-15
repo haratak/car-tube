@@ -5,6 +5,19 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+val keystorePath = System.getenv("KEYSTORE_PATH")
+val requireSigning = System.getenv("REQUIRE_SIGNING") == "true"
+
+if (requireSigning) {
+    val missing = listOf("KEYSTORE_PATH", "KEYSTORE_PASSWORD", "KEY_ALIAS", "KEY_PASSWORD")
+        .filter { System.getenv(it).isNullOrBlank() }
+    if (missing.isNotEmpty() || keystorePath.isNullOrBlank() || !file(keystorePath).isFile) {
+        throw GradleException(
+            "Signed release requires KEYSTORE_PATH (PKCS12 file), KEYSTORE_PASSWORD, KEY_ALIAS, and KEY_PASSWORD."
+        )
+    }
+}
+
 android {
     namespace = "app.cartube.installer"
     compileSdk = 35
@@ -18,9 +31,24 @@ android {
         versionName = "1.0.0"
     }
 
+    signingConfigs {
+        if (!keystorePath.isNullOrBlank() && file(keystorePath).isFile) {
+            create("release") {
+                storeType = "PKCS12"
+                storeFile = file(keystorePath)
+                storePassword = System.getenv("KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("KEY_ALIAS")
+                keyPassword = System.getenv("KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
+            if (!keystorePath.isNullOrBlank() && file(keystorePath).isFile) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
 
